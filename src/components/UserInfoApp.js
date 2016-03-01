@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-// import FuelSavingsResults from './FuelSavingsResults';
 import TextInput from './TextInput';
 import NumberInput from './NumberInput';
 import RadioGroup from 'react-radio-group';
@@ -35,7 +34,7 @@ const UserInfoApp = (props) => {
         <tr>
           <td><label htmlFor="gender">Gender</label></td>
           <td>
-            <RadioGroup name="gender" onChange={saveStateRadio}>
+            <RadioGroup name="gender" onChange={saveStateRadio} selectedValue={props.appState.userInfo.gender}>
             {Radio => (
               <div>
                 <Radio value={GENDERS[0].toLowerCase()} id={'gender' + GENDERS[0]} /><label htmlFor={'gender' + GENDERS[0]}>{GENDERS[0]}</label><br />
@@ -47,9 +46,9 @@ const UserInfoApp = (props) => {
           </td>
         </tr>
         <tr>
-          <td><label htmlFor="sexualorientation">Sexual Orientation</label></td>
+          <td><label htmlFor="sexualOrientation">Sexual Orientation</label></td>
           <td>
-            <RadioGroup name="sexualorientation" onChange={saveStateRadio}>
+            <RadioGroup name="sexualOrientation" onChange={saveStateRadio} selectedValue={props.appState.userInfo.sexualOrientation}>
             {Radio => (
               <div>
                 <Radio value={SEXUAL_ORIENTATIONS[0].toLowerCase()} id={'sex' + SEXUAL_ORIENTATIONS[0]}/><label htmlFor={'sex' + SEXUAL_ORIENTATIONS[0]}>{SEXUAL_ORIENTATIONS[0]}</label><br />
@@ -62,7 +61,7 @@ const UserInfoApp = (props) => {
         <tr>
           <td><label htmlFor="race">Race</label></td>
           <td>
-            <RadioGroup name="race" onChange={saveStateRadio}>
+            <RadioGroup name="race" onChange={saveStateRadio} selectedValue={props.appState.userInfo.race}>
             {Radio => (
               <div>
                 <Radio value={RACES[0].toLowerCase()} id={'race' + RACES[0]} /><label htmlFor={'race' + RACES[0]}>{RACES[0]}</label><br />

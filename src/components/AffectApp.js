@@ -1,72 +1,64 @@
 import React, {PropTypes} from 'react';
-import FuelSavingsResults from './FuelSavingsResults';
-import FuelSavingsTextInput from './FuelSavingsTextInput';
+import TextInput from './TextInput';
+import NumberInput from './NumberInput';
+import RadioGroup from 'react-radio-group';
+import GENDERS from '../constants/Genders.js';
+import SEXUAL_ORIENTATIONS from '../constants/SexualOrientations.js';
+import RACES from '../constants/Races.js';
 
-const FuelSavingsApp = (props) => {
-  const save = function () {
-    props.actions.saveFuelSavings(props.appState);
-  };
+const AffectApp = (props) => {
 
-  const onTimeframeChange = function (e) {
-    props.actions.calculateFuelSavings(props, 'milesDrivenTimeframe', e.target.value);
-  };
+  function saveImageInfo() {
+    props.actions.saveImageInfo(props.appState);
+  }
 
-  const fuelSavingsKeypress = function (name, value) {
-    props.actions.calculateFuelSavings(props, name, value);
-  };
+  function saveStateRadio(value, e) {
+    props.actions.updateImageState(props, e.target.name, value);
+  }
+
+  function enableImageAnswer() {
+    props.actions.enableImageAnswer(props);
+  }
 
   const settings = props.appState;
 
+  let [_, image_question, image_url] = settings.imagesRemaining[0];
+  const disabled_ms = 2000;
+
+  if (settings.imageAnswerDisabled) {
+
+    setTimeout(() => {
+      console.log('asdf');
+      enableImageAnswer();
+    }, disabled_ms);
+
+  }
+
   return (
     <div>
-      <h2>Fuel Savings Analysis2</h2>
-      <table>
-        <tbody>
-        <tr>
-          <td><label htmlFor="newMpg">New Vehicle MPG5</label></td>
-          <td><FuelSavingsTextInput onChange={fuelSavingsKeypress} name="newMpg" value={settings.newMpg} /></td>
-        </tr>
-        <tr>
-          <td><label htmlFor="tradeMpg">Trade-in MPG</label></td>
-          <td><FuelSavingsTextInput onChange={fuelSavingsKeypress} name="tradeMpg" value={settings.tradeMpg} /></td>
-        </tr>
-        <tr>
-          <td><label htmlFor="newPpg">New Vehicle price per gallon</label></td>
-          <td><FuelSavingsTextInput onChange={fuelSavingsKeypress} name="newPpg" value={settings.newPpg} /></td>
-        </tr>
-        <tr>
-          <td><label htmlFor="tradePpg">Trade-in price per gallon</label></td>
-          <td><FuelSavingsTextInput onChange={fuelSavingsKeypress} name="tradePpg" value={settings.tradePpg} /></td>
-        </tr>
-        <tr>
-          <td><label htmlFor="milesDriven">Miles Driven</label></td>
-          <td>
-            <FuelSavingsTextInput onChange={fuelSavingsKeypress} name="milesDriven" value={settings.milesDriven} /> miles per
-            <select name="milesDrivenTimeframe" onChange={onTimeframeChange} value={settings.milesDrivenTimeframe}>
-              <option value="week">Week</option>
-              <option value="month">Month</option>
-              <option value="year">Year</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td><label>Date Modified</label></td>
-          <td>{settings.dateModified}</td>
-        </tr>
-        </tbody>
-      </table>
+      <img src={image_url} className="affectimage" />
+      <p>{image_question}</p>
 
-      <hr/>
+      <div id="answerRadio">
+        <RadioGroup name="answer" onChange={saveStateRadio} selectedValue={props.appState.imageInfo.answer}>
+        {Radio => (
+          <div>
+            <Radio value="yes" id="yes" /><label htmlFor="yes">Yes</label><br />
+            <Radio value="no" id="no" /><label htmlFor="no">No</label><br />
+          </div>
+        )}
+      </RadioGroup>
+    </div>
 
-      {settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}
-      <input type="submit" value="Save" onClick={save} />
+      {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
+      <input type="submit" value="Next" onClick={saveImageInfo} disabled={settings.imageAnswerDisabled ? 'disabled' : ''} />
     </div>
   );
 };
 
-FuelSavingsApp.propTypes = {
+AffectApp.propTypes = {
   actions: PropTypes.object.isRequired,
   appState: PropTypes.object.isRequired
 };
 
-export default FuelSavingsApp;
+export default AffectApp;

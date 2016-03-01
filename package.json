@@ -19,6 +19,7 @@
   "author": "Cory House",
   "license": "MIT",
   "dependencies": {
+    "chance": "1.0.1",
     "moment": "2.11.2",
     "object-assign": "4.0.1",
     "react": "0.14.7",

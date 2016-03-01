@@ -3,18 +3,21 @@
 import React, {PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import objectAssign from 'object-assign';
 import UserInfoApp from '../components/UserInfoApp';
 import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
-import * as actions from '../actions/userInfoActions';
+import * as userActions from '../actions/userInfoActions';
+import * as imageActions from '../actions/imageActions';
 
 class App extends React.Component {
 
   render() {
-    const step1 = !this.props.appState.hasUserInfo;
-    const step2 = false;
-    const step3 = false; //this.props.imagesRemaining;
-    const step4 = false; //this.props.complete;
+    const step1   = !this.props.appState.hasUserInfo;
+    const step2   = !step1;
+    const step3   = step2 && !this.props.appState.imagesRemaining.length;
+    const step4   = this.props.appState.complete;
+    const loading = !step1 && !step2 && !step3 && !step4;
 
     return (
       <div>
@@ -37,6 +40,11 @@ class App extends React.Component {
           <h1>Complete</h1>
           <p>All done, thank you!</p>
         </div>
+
+        <div className={loading ? '' : 'hidden'}>
+          <h1>Please wait</h1>
+        </div>
+
       </div>
     );
   }
@@ -54,8 +62,11 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
+
+  //this is janky, there must be a better way
+  let all_actions = objectAssign({}, userActions, imageActions);
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(all_actions, dispatch)
   };
 }
 
