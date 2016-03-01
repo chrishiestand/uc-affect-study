@@ -23,7 +23,7 @@ const FuelSavingsApp = (props) => {
       <table>
         <tbody>
         <tr>
-          <td><label htmlFor="newMpg">New Vehicle MPG2</label></td>
+          <td><label htmlFor="newMpg">New Vehicle MPG3</label></td>
           <td><FuelSavingsTextInput onChange={fuelSavingsKeypress} name="newMpg" value={settings.newMpg} /></td>
         </tr>
         <tr>

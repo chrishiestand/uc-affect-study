@@ -6,7 +6,7 @@ function buildHandleChange(props) {
   };
 }
 
-export default function FuelSavingsTextInput(props) {
+export default function TextInput(props) {
   const handleChange = buildHandleChange(props);
 
   return (
@@ -14,14 +14,16 @@ export default function FuelSavingsTextInput(props) {
       type="text"
       placeholder={props.placeholder}
       value={props.value}
+      pattern={props.pattern}
       onChange={handleChange} />
   );
 }
 
-FuelSavingsTextInput.propTypes = {
+TextInput.propTypes = {
   name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  pattern: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

@@ -10,5 +10,6 @@ const store = configureStore();
 render(
   <Provider store={store}>
     <App />
-  </Provider>, document.getElementById('app')
+  </Provider>,
+  document.getElementById('app')
 );
