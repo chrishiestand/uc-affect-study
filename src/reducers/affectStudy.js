@@ -19,6 +19,7 @@ const initialState = {
     sequenceNumber: 1,
     imageAnswerDisabled: true,
     qualitativeAnswers: [],
+    emotion: null,
     toExport: [],
     complete: false
 };
@@ -39,6 +40,13 @@ export default function affectStudyAppState(state = initialState, action) {
     {
       let newstate = objectAssign({}, state);
       newstate.userInfo[action.name] = action.value;
+      return newstate;
+    }
+
+    case actions.UPDATE_STATE_KEY:
+    {
+      let newstate = objectAssign({}, state);
+      newstate[action.key] = action.value;
       return newstate;
     }
 

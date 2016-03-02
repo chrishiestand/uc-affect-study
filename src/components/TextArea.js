@@ -6,22 +6,23 @@ function buildHandleChange(props) {
   };
 }
 
-export default function FuelSavingsTextInput(props) {
+export default function TextArea(props) {
   const handleChange = buildHandleChange(props);
 
   return (
-    <input className="small"
+    <textarea className="small"
       type="text"
       placeholder={props.placeholder}
-      value={props.value}
-      onChange={handleChange} />
+      pattern={props.pattern}
+      onChange={handleChange}>{props.value}</textarea>
   );
 }
 
-FuelSavingsTextInput.propTypes = {
+TextArea.propTypes = {
   name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  pattern: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

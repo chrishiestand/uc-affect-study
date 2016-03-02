@@ -9,6 +9,7 @@ import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
 import * as userActions from '../actions/userInfoActions';
 import * as imageActions from '../actions/imageActions';
+import * as appActions from '../actions/appActions';
 
 class App extends React.Component {
 
@@ -32,7 +33,7 @@ class App extends React.Component {
         </div>
 
         <div className={step3 ? '' : 'hidden'}>
-          <h1>AffectApp</h1>
+          <h1>QualitativeApp</h1>
           <QualitativeApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
@@ -64,7 +65,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 
   //this is janky, there must be a better way
-  let all_actions = objectAssign({}, userActions, imageActions);
+  const all_actions = objectAssign({}, userActions, imageActions, appActions);
   return {
     actions: bindActionCreators(all_actions, dispatch)
   };
