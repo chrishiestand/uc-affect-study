@@ -15,8 +15,8 @@ const initialState = {
     userInfo: {age: null, gender: null, sexualOrientation: null, race: null},
     hasUserInfo: false,
     imagesRemaining: random_images,
-    imageInfo: {start_ms: null, answer: null},
-    imageNumber: 1,
+    imageInfo: {start_ms: null, end_ms: null, answer: null},
+    sequenceNumber: 1,
     imageAnswerDisabled: true,
     qualitativeAnswers: [],
     toExport: [],
@@ -42,26 +42,48 @@ export default function affectStudyAppState(state = initialState, action) {
       return newstate;
     }
 
-    case actions.SAVE_IMAGE_INFO:
+    case actions.NEW_IMAGE_QUESTION:
     {
-      let newstate      = objectAssign({}, state);
-      const ms_elapsed  = moment().valueOf() - state.imageInfo.start_ms;
-      const answer      = state.imageInfo.answer;
-      const imageNumber = state.imageNumber;
-      let toExport      = {images: {ms_elapsed, answer, imageNumber}};
-      newstate.toExport.push(toExport);
+      let newstate = objectAssign({}, state);
 
-      newstate.imageAnswerDisabled = true;
-      newstate.imagesRemaining.shift();
-      newstate.imageInfo.answer = null;
-      newstate.imageNumber++;
+      newstate.imageInfo.end_ms = action.end_ms;
+
       return newstate;
     }
 
-    case actions.UPDATE_IMAGE_STATE:
+    case actions.NEW_IMAGE:
+    {
+      const start_ms                 = state.imageInfo.start_ms;
+      const end_ms                   = state.imageInfo.end_ms;
+      const answer                   = state.imageInfo.answer;
+      const sequenceNumber           = state.sequenceNumber;
+      const imageNumber              = state.imagesRemaining[0][0];
+      let exportItem                 = {images: {}};
+      exportItem.images[imageNumber] = {start_ms, end_ms, answer, sequenceNumber}
+
+      let newstate      = objectAssign({}, state);
+      newstate.toExport.push(exportItem);
+
+      newstate.imageAnswerDisabled = true;
+      newstate.imagesRemaining.shift();
+      newstate.imageInfo.answer   = null;
+      newstate.imageInfo.start_ms = null;
+      newstate.imageInfo.end_ms   = null;
+      newstate.sequenceNumber++;
+      return newstate;
+    }
+
+    case actions.SET_IMAGE_ANSWER:
     {
       let newstate = objectAssign({}, state);
       newstate.imageInfo.answer = action.value;
+      return newstate;
+    }
+
+    case actions.SET_IMAGE_START_MS:
+    {
+      let newstate = objectAssign({}, state);
+      newstate.imageInfo.start_ms = action.start_ms;
       return newstate;
     }
 

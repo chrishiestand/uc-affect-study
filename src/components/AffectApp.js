@@ -2,56 +2,80 @@ import React, {PropTypes} from 'react';
 import TextInput from './TextInput';
 import NumberInput from './NumberInput';
 import RadioGroup from 'react-radio-group';
-import GENDERS from '../constants/Genders.js';
-import SEXUAL_ORIENTATIONS from '../constants/SexualOrientations.js';
-import RACES from '../constants/Races.js';
+import GENDERS from '../constants/Genders';
+import SEXUAL_ORIENTATIONS from '../constants/SexualOrientations';
+import RACES from '../constants/Races';
+import * as MAGIC from '../constants/Magic';
+import Moment from 'moment';
 
 const AffectApp = (props) => {
 
-  function saveImageInfo() {
-    props.actions.saveImageInfo(props.appState);
-  }
+  const settings = props.appState;
+
+  const [_, image_question, image_url] = settings.imagesRemaining[0];
+
+  const step1 = !settings.imageInfo.end_ms;
+  const step2 = !step1;
 
   function saveStateRadio(value, e) {
-    props.actions.updateImageState(props, e.target.name, value);
+    props.actions.setImageAnswer(props, e.target.name, value);
   }
 
   function enableImageAnswer() {
     props.actions.enableImageAnswer(props);
   }
 
-  const settings = props.appState;
+  function nextImage() {
+    props.actions.nextImage(props.appState);
+  }
 
-  let [_, image_question, image_url] = settings.imagesRemaining[0];
-  const disabled_ms = 2000;
+  function nextImageQuestion() {
+    const end_ms = Moment().valueOf();
+    props.actions.nextImageQuestion(props.appState, end_ms);
+  }
 
-  if (settings.imageAnswerDisabled) {
+  function setStartTime() {
+    const start_ms = Moment().valueOf();
+    props.actions.setImageStartMs(props, start_ms);
+  }
+
+  if (!settings.imageInfo.start_ms && settings.hasUserInfo && step1) {
+    setStartTime();
+  }
+
+  if (settings.imageAnswerDisabled && settings.hasUserInfo) {
 
     setTimeout(() => {
-      console.log('asdf');
       enableImageAnswer();
-    }, disabled_ms);
+    }, MAGIC.IMAGE_FREEZE_MS);
 
   }
 
   return (
     <div>
-      <img src={image_url} className="affectimage" />
-      <p>{image_question}</p>
+      <div className={step1 ? '' : 'hidden'}>
+        <img src={image_url} className="affectimage" />
+        <p>When you are ready to answer a question about this image, please click the "Next" button</p>
+        <input type="submit" value="Next" onClick={nextImageQuestion} disabled={settings.imageAnswerDisabled ? 'disabled' : ''} />
 
-      <div id="answerRadio">
-        <RadioGroup name="answer" onChange={saveStateRadio} selectedValue={props.appState.imageInfo.answer}>
-        {Radio => (
-          <div>
-            <Radio value="yes" id="yes" /><label htmlFor="yes">Yes</label><br />
-            <Radio value="no" id="no" /><label htmlFor="no">No</label><br />
-          </div>
-        )}
-      </RadioGroup>
-    </div>
+      </div>
 
-      {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
-      <input type="submit" value="Next" onClick={saveImageInfo} disabled={settings.imageAnswerDisabled ? 'disabled' : ''} />
+      <div className={step2 ? '' : 'hidden'}>
+        <p>{image_question}</p>
+
+        <div id="answerRadio">
+          <RadioGroup name="answer" onChange={saveStateRadio} selectedValue={props.appState.imageInfo.answer}>
+          {Radio => (
+            <div>
+              <Radio value="yes" id="yes" /><label htmlFor="yes">Yes</label><br />
+              <Radio value="no" id="no" /><label htmlFor="no">No</label><br />
+            </div>
+          )}
+          </RadioGroup>
+        </div>
+        <input type="submit" value="Next" onClick={nextImage} />
+
+      </div>
     </div>
   );
 };

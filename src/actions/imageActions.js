@@ -1,11 +1,19 @@
 import * as types from '../constants/ActionTypes';
 
-export function saveImageInfo(oldstate, name, value) {
-  return { type: types.SAVE_IMAGE_INFO, oldstate, name, value };
+export function nextImage(oldstate, name, value) {
+  return { type: types.NEW_IMAGE, oldstate, name, value };
 }
 
-export function updateImageState(oldstate, name, value) {
-  return { type: types.UPDATE_IMAGE_STATE, oldstate, name, value };
+export function nextImageQuestion(oldstate, end_ms) {
+  return { type: types.NEW_IMAGE_QUESTION, oldstate, end_ms};
+}
+
+export function setImageStartMs(oldstate, start_ms) {
+  return { type: types.SET_IMAGE_START_MS, oldstate, start_ms };
+}
+
+export function setImageAnswer(oldstate, name, value) {
+  return { type: types.SET_IMAGE_ANSWER, oldstate, name, value };
 }
 
 export function disableImageAnswer(oldstate) {
