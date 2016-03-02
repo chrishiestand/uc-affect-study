@@ -26,12 +26,10 @@ class App extends React.Component {
         </div>
 
         <div className={step2 ? '' : 'hidden'}>
-        <h1>AffectApp</h1>
           <AffectApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
         <div className={step3 ? '' : 'hidden'}>
-          <h1>QualitativeApp</h1>
           <QualitativeApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
