@@ -12,6 +12,12 @@ const AffectApp = (props) => {
 
   const settings = props.appState;
 
+  if (settings.imagesRemaining.length < 1) {
+    return (
+      <div>noop</div>
+    );
+  }
+
   const [_, image_question, image_url] = settings.imagesRemaining[0];
 
   const step1 = !settings.imageInfo.end_ms;
@@ -23,6 +29,10 @@ const AffectApp = (props) => {
 
   function enableImageAnswer() {
     props.actions.enableImageAnswer(props);
+  }
+
+  function drainImageQueue() {
+    props.actions.drainImageQueue(props);
   }
 
   function nextImage() {
@@ -57,7 +67,7 @@ const AffectApp = (props) => {
         <img src={image_url} className="affectimage" />
         <p>When you are ready to answer a question about this image, please click the "Next" button</p>
         <input type="submit" value="Next" onClick={nextImageQuestion} disabled={settings.imageAnswerDisabled ? 'disabled' : ''} />
-
+        <button onClick={drainImageQueue}>Test Only: Skip Images</button>
       </div>
 
       <div className={step2 ? '' : 'hidden'}>

@@ -67,7 +67,7 @@ export default function affectStudyAppState(state = initialState, action) {
       const sequenceNumber           = state.sequenceNumber;
       const imageNumber              = state.imagesRemaining[0][0];
       let exportItem                 = {images: {}};
-      exportItem.images[imageNumber] = {start_ms, end_ms, answer, sequenceNumber}
+      exportItem.images[imageNumber] = {start_ms, end_ms, answer, sequenceNumber};
 
       let newstate      = objectAssign({}, state);
       newstate.toExport.push(exportItem);
@@ -106,6 +106,20 @@ export default function affectStudyAppState(state = initialState, action) {
     {
       let newstate = objectAssign({}, state);
       newstate.imageAnswerDisabled = true;
+      return newstate;
+    }
+
+    case actions.IMAGE_DRAIN_QUEUE:
+    {
+      let newstate = objectAssign({}, state);
+      newstate.imagesRemaining = [];
+      return newstate;
+    }
+
+    case actions.COMPLETE:
+    {
+      let newstate = objectAssign({}, state);
+      newstate.complete = true;
       return newstate;
     }
 

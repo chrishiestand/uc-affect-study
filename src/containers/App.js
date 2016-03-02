@@ -7,17 +7,15 @@ import objectAssign from 'object-assign';
 import UserInfoApp from '../components/UserInfoApp';
 import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
-import * as userActions from '../actions/userInfoActions';
-import * as imageActions from '../actions/imageActions';
 import * as appActions from '../actions/appActions';
 
 class App extends React.Component {
 
   render() {
     const step1   = !this.props.appState.hasUserInfo;
-    const step2   = !step1;
-    const step3   = step2 && !this.props.appState.imagesRemaining.length;
-    const step4   = this.props.appState.complete;
+    const step2   = !step1 && this.props.appState.imagesRemaining.length;
+    const step3   = !step1 && !step2 && !this.props.appState.complete;
+    const step4   = this.props.appState.complete && !this.props.appState.toExport;
     const loading = !step1 && !step2 && !step3 && !step4;
 
     return (
@@ -64,10 +62,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 
-  //this is janky, there must be a better way
-  const all_actions = objectAssign({}, userActions, imageActions, appActions);
   return {
-    actions: bindActionCreators(all_actions, dispatch)
+    actions: bindActionCreators(appActions, dispatch)
   };
 }
 
