@@ -18,10 +18,30 @@ const AffectApp = (props) => {
     );
   }
 
-  const [_, image_question, image_url] = settings.imagesRemaining[0];
-
   const step1 = !settings.imageInfo.end_ms;
   const step2 = !step1;
+  let next_image_url;
+
+  const [_, image_question, image_url] = settings.imagesRemaining[0];
+
+  if (settings.imagesRemaining.length > 1) {
+    next_image_url = settings.imagesRemaining[1][2];
+  }
+
+  /* kludge warning:
+  ** This assumes browser behavior of downloading the hidden image and soon re-use cached image
+  ** There is probably a more reliable way
+  */
+  function preloadNextImage() {
+    if (!next_image_url) {
+      return (
+        <span></span>
+      );
+    }
+    return (
+      <img className="hidden" src={next_image_url} />
+    );
+  }
 
   function saveStateRadio(value, e) {
     props.actions.setImageAnswer(props, e.target.name, value);
@@ -84,7 +104,7 @@ const AffectApp = (props) => {
           </RadioGroup>
         </div>
         <input type="submit" value="Next" onClick={nextImage} />
-
+        {preloadNextImage()}
       </div>
     </div>
   );
