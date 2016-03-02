@@ -18,8 +18,9 @@ const initialState = {
     imageInfo: {start_ms: null, end_ms: null, answer: null},
     sequenceNumber: 1,
     imageAnswerDisabled: true,
-    qualitativeAnswers: [],
     emotion: null,
+    qual1: null,
+    qual2: null,
     toExport: [],
     complete: false
 };
@@ -118,7 +119,16 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.COMPLETE:
     {
-      let newstate = objectAssign({}, state);
+      let newstate     = objectAssign({}, state);
+
+      const {emotion, qual1, qual2} = state;
+
+      const exportComplete = {complete: true};
+      const exportQ1       = {qual1};
+      const exportQ2       = {qual2};
+      const exportEmotion  = {emotion};
+
+      newstate.toExport = newstate.toExport.concat([exportComplete, exportQ1, exportQ2, exportEmotion]);
       newstate.complete = true;
       return newstate;
     }
