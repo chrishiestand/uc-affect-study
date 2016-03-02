@@ -41,7 +41,7 @@ class App extends React.Component {
         </div>
 
         <div className={loading ? '' : 'hidden'}>
-          <h1>Please wait</h1>
+          <h1>Do not close this browser window, please wait.</h1>
         </div>
 
       </div>
