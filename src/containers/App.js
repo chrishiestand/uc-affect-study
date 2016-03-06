@@ -1,21 +1,79 @@
 // This file bootstraps the app with the boilerplate necessary
 // to support hot reloading in Redux
 import React, {PropTypes} from 'react';
+import _Promise from 'bluebird';
+import Firebase from 'firebase';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import objectAssign from 'object-assign';
 import UserInfoApp from '../components/UserInfoApp';
 import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
 import * as appActions from '../actions/appActions';
+import * as Export from '../businessLogic/export';
+
+process.on('unhandledRejection', err => { throw err; });
 
 class App extends React.Component {
 
+  componentDidMount() {
+    this.setupExport();
+    this.runExport();
+  }
+
+  async setupExport() {
+    /*eslint no-console: 0*/
+
+    let ref = this.props.appState.exportRef;
+
+    try {
+      await ref.authAnonymously();
+    }
+    catch(error) {
+      console.error('failed to anonymously auth');
+      return setTimeout(this.setupExport.bind(this), 1000);
+    }
+
+    console.log('successful anon auth');
+    this.props.actions.authExport();
+  }
+
+  async runExport() {
+
+    const settings        = this.props.appState;
+    const ref             = settings.exportRef;
+    const userid          = settings.uniqueUid;
+    const userInfoExport  = settings.userInfoExport;
+    const userImageExport = settings.userImageExport;
+
+    const num_exports = Export.getNumToExport(settings);
+
+    if (!userid || !ref || !num_exports) {
+      return setTimeout(this.runExport.bind(this), 1000);
+    }
+
+    try {
+      await Export.exportImageInfo_P(ref, userid, userImageExport);
+      await Export.exportUserInfo_P(ref, userid, userInfoExport);
+    }
+    catch(error) {
+      console.error(error);
+      return setTimeout(this.runExport.bind(this), 1000);
+    }
+
+    console.log('successful export');
+
+    this.props.actions.unsetExports(settings, userInfoExport, userImageExport);
+    return setTimeout(this.runExport.bind(this), 1000);
+  }
+
   render() {
-    const step1   = !this.props.appState.hasUserInfo;
-    const step2   = !step1 && this.props.appState.imagesRemaining.length;
-    const step3   = !step1 && !step2 && !this.props.appState.complete;
-    const step4   = this.props.appState.complete && !this.props.appState.toExport;
+    const settings    = this.props.appState;
+    const num_exports = Export.getNumToExport(settings);
+
+    const step1   = !settings.hasUserInfo;
+    const step2   = !step1 && settings.imagesRemaining.length;
+    const step3   = !step1 && !step2 && !settings.complete;
+    const step4   = settings.complete && num_exports < 1;
     const loading = !step1 && !step2 && !step3 && !step4;
 
     return (
@@ -36,6 +94,7 @@ class App extends React.Component {
         <div className={step4 ? '' : 'hidden'}>
           <h1>Complete</h1>
           <p>All done, thank you!</p>
+          <p>Refresh the page to start over</p>
         </div>
 
         <div className={loading ? '' : 'hidden'}>

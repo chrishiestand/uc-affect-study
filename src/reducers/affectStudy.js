@@ -1,14 +1,18 @@
 import Chance from 'chance';
 import moment from 'moment';
 import objectAssign from 'object-assign';
+import lodash from 'lodash';
 
 import * as actions from '../constants/ActionTypes';
 import images from '../constants/Images';
+import * as FBC from '../constants/Firebase';
+import * as BL from '../businessLogic/export';
 
 let chance = new Chance();
 
 const uniqueUid   = chance.integer({min: 1, max: 999999999999});
 let random_images = chance.shuffle(images);
+let rootref       = BL.makeBaseRef(FBC.FIREBASE_HOST);
 
 const initialState = {
     uniqueUid,
@@ -21,7 +25,9 @@ const initialState = {
     emotion: null,
     qual1: null,
     qual2: null,
-    toExport: [],
+    exportRef: rootref,
+    userInfoExport: {},
+    userImageExport: {},
     complete: false
 };
 
@@ -31,9 +37,9 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.SAVE_USER_INFO:
     {
-      let newstate         = objectAssign({}, state);
-      newstate.hasUserInfo = true;
-      newstate.toExport.push({user_info: newstate.userInfo});
+      let newstate            = objectAssign({}, state);
+      newstate.hasUserInfo    = true;
+      newstate.userInfoExport = newstate.userInfo;
       return newstate;
     }
 
@@ -62,22 +68,22 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.NEW_IMAGE:
     {
-      const start_ms                 = state.imageInfo.start_ms;
-      const end_ms                   = state.imageInfo.end_ms;
-      const answer                   = state.imageInfo.answer;
-      const sequenceNumber           = state.sequenceNumber;
-      const imageNumber              = state.imagesRemaining[0][0];
-      let exportItem                 = {images: {}};
-      exportItem.images[imageNumber] = {start_ms, end_ms, answer, sequenceNumber};
+      const start_ms        = state.imageInfo.start_ms;
+      const end_ms          = state.imageInfo.end_ms;
+      const answer          = state.imageInfo.answer;
+      const sequence_number = state.sequenceNumber;
+      const image_number    = state.imagesRemaining[0][0];
+      let exportItem        = {start_ms, end_ms, answer, sequence_number, image_number};
 
       let newstate      = objectAssign({}, state);
-      newstate.toExport.push(exportItem);
 
-      newstate.imageAnswerDisabled = true;
+      newstate.userImageExport[image_number] = exportItem;
+
+      newstate.imageAnswerDisabled    = true;
+      newstate.imageInfo.answer       = null;
+      newstate.imageInfo.start_ms     = null;
+      newstate.imageInfo.end_ms       = null;
       newstate.imagesRemaining.shift();
-      newstate.imageInfo.answer   = null;
-      newstate.imageInfo.start_ms = null;
-      newstate.imageInfo.end_ms   = null;
       newstate.sequenceNumber++;
       return newstate;
     }
@@ -119,17 +125,33 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.COMPLETE:
     {
-      let newstate     = objectAssign({}, state);
+      let newstate = objectAssign({}, state);
 
       const {emotion, qual1, qual2} = state;
 
-      const exportComplete = {complete: true};
-      const exportQ1       = {qual1};
-      const exportQ2       = {qual2};
-      const exportEmotion  = {emotion};
+      const complete   = true;
+      const exportItem = {qual1, qual2, emotion, complete};
 
-      newstate.toExport = newstate.toExport.concat([exportComplete, exportQ1, exportQ2, exportEmotion]);
+      newstate.userInfo = objectAssign(newstate.userInfo, exportItem);
       newstate.complete = true;
+      return newstate;
+    }
+
+    case actions.EXPORT_COMPLETE:
+    {
+      const userInfo  = action.userInfo;
+      const imageInfo = action.imageInfo;
+
+      let newstate = objectAssign({}, state);
+
+      lodash.map(userInfo, (val, key) => {
+        delete newstate.userInfoExport[key];
+      });
+
+      lodash.map(imageInfo, (val, key) => {
+        delete newstate.userImageExport[key];
+      });
+
       return newstate;
     }
 

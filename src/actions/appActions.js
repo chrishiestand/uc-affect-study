@@ -1,7 +1,7 @@
 import * as types from '../constants/ActionTypes';
 
-export function nextImage(oldstate, name, value) {
-  return { type: types.NEW_IMAGE, oldstate, name, value };
+export function nextImage(oldstate) {
+  return { type: types.NEW_IMAGE, oldstate };
 }
 
 export function nextImageQuestion(oldstate, end_ms) {
@@ -42,4 +42,12 @@ export function drainImageQueue(oldstate) {
 
 export function markComplete(oldstate) {
   return { type: types.COMPLETE, oldstate };
+}
+
+export function unsetExports(oldstate, userInfo, imageInfo) {
+  return { type: types.EXPORT_COMPLETE, oldstate, userInfo, imageInfo };
+}
+
+export function authExport(oldstate) {
+  return { type: types.EXPORT_AUTH, oldstate };
 }

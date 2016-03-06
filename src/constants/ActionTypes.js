@@ -9,3 +9,5 @@ export const DISABLE_IMAGE_ANSWER = 'DISABLE_IMAGE_ANSWER';
 export const ENABLE_IMAGE_ANSWER  = 'ENABLE_IMAGE_ANSWER';
 export const IMAGE_DRAIN_QUEUE    = 'IMAGE_DRAIN_QUEUE';
 export const COMPLETE             = 'COMPLETE';
+export const EXPORT_COMPLETE      = 'EXPORT_COMPLETE';
+export const EXPORT_AUTH          = 'EXPORT_AUTH';
