@@ -3,7 +3,6 @@ import TextInput from './TextInput';
 import NumberInput from './NumberInput';
 import RadioGroup from 'react-radio-group';
 import GENDERS from '../constants/Genders';
-import SEXUAL_ORIENTATIONS from '../constants/SexualOrientations';
 import RACES from '../constants/Races';
 import * as MAGIC from '../constants/Magic';
 import Moment from 'moment';

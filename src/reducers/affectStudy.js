@@ -16,7 +16,7 @@ let rootref       = BL.makeBaseRef(FBC.FIREBASE_HOST);
 
 const initialState = {
     uniqueUid,
-    userInfo: {age: null, gender: null, sexualOrientation: null, race: null},
+    userInfo: {age: null, gender: null, sexual_orientation: null, race: null},
     hasUserInfo: false,
     imagesRemaining: random_images,
     imageInfo: {start_ms: null, end_ms: null, answer: null},

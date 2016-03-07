@@ -46,9 +46,9 @@ const UserInfoApp = (props) => {
           </td>
         </tr>
         <tr>
-          <td><label htmlFor="sexualOrientation">Sexual Orientation</label></td>
+          <td><label htmlFor="sexual_orientation">Sexual Orientation</label></td>
           <td>
-            <RadioGroup name="sexualOrientation" onChange={saveStateRadio} selectedValue={props.appState.userInfo.sexualOrientation}>
+            <RadioGroup name="sexual_orientation" onChange={saveStateRadio} selectedValue={props.appState.userInfo.sexual_orientation}>
             {Radio => (
               <div>
                 <Radio value={SEXUAL_ORIENTATIONS[0].toLowerCase()} id={'sex' + SEXUAL_ORIENTATIONS[0]}/><label htmlFor={'sex' + SEXUAL_ORIENTATIONS[0]}>{SEXUAL_ORIENTATIONS[0]}</label><br />
