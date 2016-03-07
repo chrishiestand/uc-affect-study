@@ -43,3 +43,7 @@ textarea {width: 100%; min-height: 10em;}
   text-align: center;
   width: 100%;
 }
+
+.test {
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='220px'><text x='0' y='20' fill='red' font-size='25' fill-opacity='0.1'>Test</text></svg>");
+}

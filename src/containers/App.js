@@ -11,6 +11,7 @@ import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
 import * as appActions from '../actions/appActions';
 import * as Export from '../businessLogic/export';
+import * as FBC from '../constants/Firebase';
 
 process.on('unhandledRejection', err => { throw err; });
 
@@ -79,7 +80,7 @@ class App extends React.Component {
     const loading = !step1 && !step2 && !step3 && !step4 && !step5;
 
     return (
-      <div>
+      <div className={FBC.ENV === 'production' ? '' : 'test'}>
 
         <div className={step1 ? '' : 'hidden'}>
           <WarningApp appState={this.props.appState} actions={this.props.actions}/>
