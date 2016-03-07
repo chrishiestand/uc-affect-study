@@ -77,7 +77,29 @@ const AffectApp = (props) => {
     setTimeout(() => {
       enableImageAnswer();
     }, MAGIC.IMAGE_FREEZE_MS);
+  }
 
+  function isMissingInfo() {
+
+    if (settings.imageInfo.answer) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function submitDisableValue() {
+    if (isMissingInfo()) {
+      return 'disabled';
+    }
+    return '';
+  }
+
+  function submitButtonText() {
+    if (isMissingInfo()) {
+      return 'Answer to continue';
+    }
+    return 'Next';
   }
 
   return (
@@ -102,7 +124,7 @@ const AffectApp = (props) => {
           )}
           </RadioGroup>
         </div>
-        <input type="submit" value="Next" onClick={nextImage} />
+        <input type="submit" value={submitButtonText()} onClick={nextImage} disabled={submitDisableValue()} />
         {preloadNextImage()}
       </div>
     </div>

@@ -7,6 +7,8 @@ import EMOTIONS from '../constants/Emotions';
 
 const UserInfoApp = (props) => {
 
+  const settings = props.appState;
+
   function markComplete() {
     props.actions.markComplete(props.appState);
   }
@@ -19,7 +21,29 @@ const UserInfoApp = (props) => {
     props.actions.updateStateKey(props, e.target.name, value);
   }
 
-  const settings = props.appState;
+  function isMissingInfo() {
+
+    if (settings.emotion && settings.qual1 && settings.qual2) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function submitDisableValue() {
+    if (isMissingInfo()) {
+      return 'disabled';
+    }
+    return '';
+  }
+
+  function submitButtonText() {
+    if (isMissingInfo()) {
+      return 'Answer to continue';
+    }
+    return 'Finish';
+  }
+
 
   return (
     <div>
@@ -55,7 +79,7 @@ const UserInfoApp = (props) => {
       <hr/>
 
       {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
-      <input type="submit" value="Finish" onClick={markComplete} disabled={false/*TODO*/} />
+      <input type="submit" value={submitButtonText()} onClick={markComplete} disabled={submitDisableValue()} />
     </div>
   );
 };

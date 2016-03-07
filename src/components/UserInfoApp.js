@@ -8,6 +8,8 @@ import RACES from '../constants/Races.js';
 
 const UserInfoApp = (props) => {
 
+  const settings = props.appState;
+
   function saveUserInfo() {
     props.actions.saveUserInfo(props.appState);
   }
@@ -20,7 +22,30 @@ const UserInfoApp = (props) => {
     props.actions.updateUserState(props, e.target.name, value);
   }
 
-  const settings = props.appState;
+  function isMissingInfo() {
+    const ui = settings.userInfo;
+
+    if (ui.age && ui.gender && ui.sexual_orientation && ui.race) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function submitDisableValue() {
+    if (isMissingInfo()) {
+      return 'disabled';
+    }
+    return '';
+  }
+
+  function submitButtonText() {
+    if (isMissingInfo()) {
+      return 'Answer to continue';
+    }
+    return 'Next';
+  }
+
 
   return (
     <div>
@@ -78,7 +103,7 @@ const UserInfoApp = (props) => {
       <hr/>
 
       {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
-      <input type="submit" value="Next" onClick={saveUserInfo} disabled={false/*TODO*/} />
+      <input type="submit" value={submitButtonText()} onClick={saveUserInfo} disabled={submitDisableValue()} />
     </div>
   );
 };
