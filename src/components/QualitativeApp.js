@@ -41,7 +41,7 @@ const UserInfoApp = (props) => {
     if (isMissingInfo()) {
       return 'Answer to continue';
     }
-    return 'Finish';
+    return 'Next';
   }
 
 
@@ -76,9 +76,6 @@ const UserInfoApp = (props) => {
         </tbody>
       </table>
 
-      <hr/>
-
-      {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
       <input type="submit" value={submitButtonText()} onClick={markComplete} disabled={submitDisableValue()} />
     </div>
   );

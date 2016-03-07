@@ -100,9 +100,6 @@ const UserInfoApp = (props) => {
         </tbody>
       </table>
 
-      <hr/>
-
-      {/*{settings.necessaryDataIsProvidedToCalculateSavings ? <FuelSavingsResults savings={settings.savings} /> : null}*/}
       <input type="submit" value={submitButtonText()} onClick={saveUserInfo} disabled={submitDisableValue()} />
     </div>
   );

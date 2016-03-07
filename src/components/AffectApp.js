@@ -5,9 +5,10 @@ import RadioGroup from 'react-radio-group';
 import GENDERS from '../constants/Genders';
 import RACES from '../constants/Races';
 import * as MAGIC from '../constants/Magic';
+import * as FBC from '../constants/Firebase';
 import Moment from 'moment';
 
-const AffectApp = (props) => {
+function AffectApp(props) {
 
   const settings = props.appState;
 
@@ -21,7 +22,7 @@ const AffectApp = (props) => {
   const step2 = !step1;
   let next_image_url;
 
-  const [_, image_question, image_url] = settings.imagesRemaining[0];
+  const [image_number, image_question, image_url] = settings.imagesRemaining[0];
 
   if (settings.imagesRemaining.length > 1) {
     next_image_url = settings.imagesRemaining[1][2];
@@ -32,6 +33,7 @@ const AffectApp = (props) => {
   ** There is probably a more reliable way
   */
   function preloadNextImage() {
+
     if (!next_image_url) {
       return (
         <span></span>
@@ -68,15 +70,26 @@ const AffectApp = (props) => {
     props.actions.setImageStartMs(props, start_ms);
   }
 
-  if (!settings.imageInfo.start_ms && settings.hasUserInfo && step1) {
-    setStartTime();
+  if (step1 && settings.hasUserInfo && !settings.imageTimeout) {
+    const timeout = setTimeout(() => {
+      nextImageQuestion();
+    }, MAGIC.IMAGE_MAX_MS);
+
+    // Kludge: setImmediate should be removed and logic done in state logic
+    setImmediate(() => props.actions.updateStateKey(props.appState, 'imageTimeout', timeout));
   }
 
-  if (settings.imageAnswerDisabled && settings.hasUserInfo) {
+  if (!settings.imageInfo.start_ms && settings.hasUserInfo && step1) {
+    setImmediate(() => setStartTime());
+  }
 
-    setTimeout(() => {
+  if (settings.imageAnswerDisabled && settings.hasUserInfo && !settings.imageFreeze) {
+
+    const timeout = setTimeout(() => {
       enableImageAnswer();
     }, MAGIC.IMAGE_FREEZE_MS);
+    setImmediate(() => props.actions.updateStateKey(props.appState, 'imageFreeze', timeout));
+
   }
 
   function isMissingInfo() {
@@ -106,9 +119,9 @@ const AffectApp = (props) => {
     <div>
       <div className={step1 ? '' : 'hidden'}>
         <img src={image_url} className="affectimage" />
-        <p>When you are ready to answer a question about this image, please click the "Next" button</p>
+        <p>Press next to continue</p>
         <input type="submit" value="Next" onClick={nextImageQuestion} disabled={settings.imageAnswerDisabled ? 'disabled' : ''} />
-        <button onClick={drainImageQueue}>Test Only: Skip Images</button>
+        <button onClick={drainImageQueue} className={FBC.ENV === 'production' ? 'hidden' : ''}>Test Only: Skip Images</button>
       </div>
 
       <div className={step2 ? '' : 'hidden'}>
@@ -129,7 +142,7 @@ const AffectApp = (props) => {
       </div>
     </div>
   );
-};
+}
 
 AffectApp.propTypes = {
   actions: PropTypes.object.isRequired,

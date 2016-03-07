@@ -20,6 +20,8 @@ const initialState = {
     hasUserInfo: false,
     imagesRemaining: random_images,
     imageInfo: {start_ms: null, end_ms: null, answer: null},
+    imageFreeze: null,
+    imageTimeout: null,
     sequenceNumber: 1,
     imageAnswerDisabled: true,
     emotion: null,
@@ -54,6 +56,7 @@ export default function affectStudyAppState(state = initialState, action) {
     {
       let newstate = objectAssign({}, state);
       newstate[action.key] = action.value;
+
       return newstate;
     }
 
@@ -63,19 +66,25 @@ export default function affectStudyAppState(state = initialState, action) {
 
       newstate.imageInfo.end_ms = action.end_ms;
 
+      if (newstate.imageTimeout) {
+        clearTimeout(newstate.imageTimeout);
+        newstate.imageTimeout = null;
+      }
+
       return newstate;
     }
 
     case actions.NEW_IMAGE:
     {
-      const start_ms        = state.imageInfo.start_ms;
-      const end_ms          = state.imageInfo.end_ms;
-      const answer          = state.imageInfo.answer;
-      const sequence_number = state.sequenceNumber;
-      const image_number    = state.imagesRemaining[0][0];
+      let newstate      = objectAssign({}, state);
+
+      const start_ms        = newstate.imageInfo.start_ms;
+      const end_ms          = newstate.imageInfo.end_ms;
+      const answer          = newstate.imageInfo.answer;
+      const sequence_number = newstate.sequenceNumber;
+      const image_number    = newstate.imagesRemaining[0][0];
       let exportItem        = {start_ms, end_ms, answer, sequence_number, image_number};
 
-      let newstate      = objectAssign({}, state);
 
       newstate.userImageExport[image_number] = exportItem;
 
@@ -106,6 +115,7 @@ export default function affectStudyAppState(state = initialState, action) {
     {
       let newstate = objectAssign({}, state);
       newstate.imageAnswerDisabled = false;
+      newstate.imageFreeze = null;
       return newstate;
     }
 
@@ -156,6 +166,6 @@ export default function affectStudyAppState(state = initialState, action) {
     }
 
     default:
-      return state;
+      return objectAssign({}, state);
   }
 }

@@ -5,6 +5,7 @@ import _Promise from 'bluebird';
 import Firebase from 'firebase';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import WarningApp from '../components/WarningApp';
 import UserInfoApp from '../components/UserInfoApp';
 import AffectApp from '../components/AffectApp';
 import QualitativeApp from '../components/QualitativeApp';
@@ -70,28 +71,34 @@ class App extends React.Component {
     const settings    = this.props.appState;
     const num_exports = Export.getNumToExport(settings);
 
-    const step1   = !settings.hasUserInfo;
-    const step2   = !step1 && settings.imagesRemaining.length;
-    const step3   = !step1 && !step2 && !settings.complete;
-    const step4   = settings.complete && num_exports < 1;
-    const loading = !step1 && !step2 && !step3 && !step4;
+    const step1   = !settings.warning_accepted;
+    const step2   = !step1 && !settings.hasUserInfo;
+    const step3   = !step1 && !step2 && settings.imagesRemaining.length;
+    const step4   = !step1 && !step2 && !step3 && !settings.complete;
+    const step5   = settings.complete && num_exports < 1;
+    const loading = !step1 && !step2 && !step3 && !step4 && !step5;
 
     return (
       <div>
+
         <div className={step1 ? '' : 'hidden'}>
+          <WarningApp appState={this.props.appState} actions={this.props.actions}/>
+        </div>
+
+        <div className={step2 ? '' : 'hidden'}>
           <h2>Welcome to the UC Affect Study</h2>
           <UserInfoApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
-        <div className={step2 ? '' : 'hidden'}>
+        <div className={step3 ? '' : 'hidden'}>
           <AffectApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
-        <div className={step3 ? '' : 'hidden'}>
+        <div className={step4 ? '' : 'hidden'}>
           <QualitativeApp appState={this.props.appState} actions={this.props.actions}/>
         </div>
 
-        <div className={step4 ? '' : 'hidden'}>
+        <div className={step5 ? '' : 'hidden'}>
           <h1>Complete</h1>
           <p>All done, thank you!</p>
           <p>Refresh the page to start over</p>

@@ -36,3 +36,10 @@ input.small { width: 46px; }
 #answerRadio {margin-bottom: 1em;}
 
 textarea {width: 100%; min-height: 10em;}
+
+#warning {
+  color: red;
+  line-height: 2em;
+  text-align: center;
+  width: 100%;
+}
