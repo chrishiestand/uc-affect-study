@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import moment from 'moment';
+import Moment from 'moment';
 import objectAssign from 'object-assign';
 import lodash from 'lodash';
 
@@ -16,7 +16,7 @@ let rootref       = BL.makeBaseRef(FBC.FIREBASE_HOST);
 
 const initialState = {
     uniqueUid,
-    userInfo: {age: null, gender: null, sexual_orientation: null, race: null},
+    userInfo: {age: null, gender: null, sexual_orientation: null, race: null, start_ms: Moment().valueOf(), version: FBC.VERSION},
     hasUserInfo: false,
     imagesRemaining: random_images,
     imageInfo: {start_ms: null, end_ms: null, answer: null},
@@ -39,10 +39,9 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.SAVE_USER_INFO:
     {
-      let newstate                    = objectAssign({}, state);
-      newstate.hasUserInfo            = true;
-      newstate.userInfoExport         = newstate.userInfo;
-      newstate.userInfoExport.version = FBC.VERSION;
+      let newstate            = objectAssign({}, state);
+      newstate.hasUserInfo    = true;
+      newstate.userInfoExport = newstate.userInfo;
       return newstate;
     }
 
