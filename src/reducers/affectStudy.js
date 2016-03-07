@@ -39,9 +39,10 @@ export default function affectStudyAppState(state = initialState, action) {
 
     case actions.SAVE_USER_INFO:
     {
-      let newstate            = objectAssign({}, state);
-      newstate.hasUserInfo    = true;
-      newstate.userInfoExport = newstate.userInfo;
+      let newstate                    = objectAssign({}, state);
+      newstate.hasUserInfo            = true;
+      newstate.userInfoExport         = newstate.userInfo;
+      newstate.userInfoExport.version = FBC.VERSION;
       return newstate;
     }
 
