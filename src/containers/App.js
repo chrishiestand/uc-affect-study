@@ -102,7 +102,6 @@ class App extends React.Component {
         <div className={step5 ? '' : 'hidden'}>
           <h1>Complete</h1>
           <p>All done, thank you!</p>
-          <p>Refresh the page to start over</p>
         </div>
 
         <div className={loading ? '' : 'hidden'}>
