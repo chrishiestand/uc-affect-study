@@ -9,19 +9,19 @@ export function nextImageQuestion(oldstate, end_ms) {
 }
 
 export function setImageStartMs(oldstate, start_ms) {
-  return { type: types.SET_IMAGE_START_MS, oldstate, start_ms };
+  return { type: types.SET_IMAGE_START_MS, oldstate, start_ms};
 }
 
-export function setImageAnswer(oldstate, name, value) {
-  return { type: types.SET_IMAGE_ANSWER, oldstate, name, value };
+export function setImageAnswer(oldstate, name, value, correct) {
+  return { type: types.SET_IMAGE_ANSWER, oldstate, name, value, correct};
 }
 
 export function disableImageAnswer(oldstate) {
-  return { type: types.DISABLE_IMAGE_ANSWER, oldstate };
+  return { type: types.DISABLE_IMAGE_ANSWER, oldstate};
 }
 
 export function enableImageAnswer(oldstate) {
-  return { type: types.ENABLE_IMAGE_ANSWER, oldstate };
+  return { type: types.ENABLE_IMAGE_ANSWER, oldstate};
 }
 
 export function updateStateKey(oldstate, key, value) {

@@ -22,7 +22,7 @@ function AffectApp(props) {
   const step2 = !step1;
   let next_image_url;
 
-  const [image_number, image_question, image_url] = settings.imagesRemaining[0];
+  const [image_number, image_question, image_url, image_answer] = settings.imagesRemaining[0];
 
   if (settings.imagesRemaining.length > 1) {
     next_image_url = settings.imagesRemaining[1][2];
@@ -45,7 +45,11 @@ function AffectApp(props) {
   }
 
   function saveStateRadio(value, e) {
-    props.actions.setImageAnswer(props, e.target.name, value);
+    const lower_val  = value.toLowerCase();
+    const answer_val = image_answer.toLowerCase();
+    const correct    = lower_val === answer_val;
+
+    props.actions.setImageAnswer(props, e.target.name, value, correct);
   }
 
   function enableImageAnswer() {

@@ -19,7 +19,7 @@ const initialState = {
     userInfo: {age: null, gender: null, sexual_orientation: null, race: null, start_ms: Moment().valueOf(), version: FBC.VERSION},
     hasUserInfo: false,
     imagesRemaining: random_images,
-    imageInfo: {start_ms: null, end_ms: null, answer: null},
+    imageInfo: {start_ms: null, end_ms: null, answer: null, correct: null},
     imageFreeze: null,
     imageTimeout: null,
     sequenceNumber: 1,
@@ -81,15 +81,17 @@ export default function affectStudyAppState(state = initialState, action) {
       const start_ms        = newstate.imageInfo.start_ms;
       const end_ms          = newstate.imageInfo.end_ms;
       const answer          = newstate.imageInfo.answer;
+      const correct         = newstate.imageInfo.correct;
       const sequence_number = newstate.sequenceNumber;
       const image_number    = newstate.imagesRemaining[0][0];
-      let exportItem        = {start_ms, end_ms, answer, sequence_number, image_number};
+      let exportItem        = {start_ms, end_ms, correct, sequence_number, image_number, answer};
 
 
       newstate.userImageExport[image_number] = exportItem;
 
       newstate.imageAnswerDisabled    = true;
       newstate.imageInfo.answer       = null;
+      newstate.imageInfo.correct      = null;
       newstate.imageInfo.start_ms     = null;
       newstate.imageInfo.end_ms       = null;
       newstate.imagesRemaining.shift();
@@ -100,7 +102,8 @@ export default function affectStudyAppState(state = initialState, action) {
     case actions.SET_IMAGE_ANSWER:
     {
       let newstate = objectAssign({}, state);
-      newstate.imageInfo.answer = action.value;
+      newstate.imageInfo.answer  = action.value;
+      newstate.imageInfo.correct = action.correct;
       return newstate;
     }
 
