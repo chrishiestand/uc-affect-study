@@ -1,6 +1,5 @@
 # UC Affect Study
-
-code based on <https://github.com/coryhouse/react-slingshot>
+Webapp that writes data to firebase. Read the data into spreadsheet form with: <https://github.com/chrishiestand/uc-affect-study-importer>
 
 
 ## Firebase Security Rules
@@ -24,3 +23,7 @@ Prevent users from accidentally overwriting another user's data. Only admins can
   }
 }
 ```
+
+# Thanks
+code based on <https://github.com/coryhouse/react-slingshot>
+
